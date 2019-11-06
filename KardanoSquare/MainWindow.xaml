@@ -7,23 +7,31 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="445.6"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0">
             <StackPanel x:Name="stencilStackPanel">
                 <TextBlock Text="Відкритий текст" FontSize="16" Margin="10"/>
-                <TextBox Height="80" FontSize="16"></TextBox>
+                <TextBox x:Name="plainTextBox" Height="80" FontSize="16" Text="Привіт, як справи? Чи не втомився ти?"></TextBox>
                 <TextBlock Text="Відкритий текст" FontSize="16" Margin="10"/>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Розмір матриці" FontSize="16" Margin="10"/>
                     <TextBox x:Name="sizeTextBox" Width="40" Height="26" FontSize="16" Text=""></TextBox>
-                    <Button Content="Відобразити" Margin="10" Padding="10 0" FontSize="16" Click="Button_Click_1"></Button>
+                    <Button Content="Відобразити" Margin="8" Padding="10 2" FontSize="16" Click="Button_Click_1"></Button>
+                    <Button x:Name="encryptButton" Content="Зашифрувати" Margin="8" Padding="10 2" FontSize="16" Click="encryptButton_Click"/>
                 </StackPanel>
             </StackPanel>
         </Grid>
-        <Grid Grid.Column="1">
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <Grid x:Name="stencilContainer"/>
+        </ScrollViewer>
+        <Grid Grid.Column="1" ShowGridLines="True">
             
         </Grid>
     </Grid>

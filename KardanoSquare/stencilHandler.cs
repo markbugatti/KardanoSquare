@@ -8,40 +8,49 @@ using System.Windows.Controls;
 
 namespace KardanoSquare
 {
-    class stencilHandler
+    class StencilHandler
     {
-        const int gridLenght = 20;
-        public static void Draw(StackPanel stackPanel, int size)
+        const double gridLenght = 30;
+        object container;
+        public StencilHandler(object container)
         {
-            Grid grid = new Grid();
+            this.container = container;
+        }
+
+        public void Draw(int size, RoutedEventHandler eventHandler)
+        {
+            Grid grid = (Grid)container;
             grid.HorizontalAlignment = HorizontalAlignment.Center;
+            grid.VerticalAlignment = VerticalAlignment.Center;
+
             for (int i = 0; i < size; i++)
             {
                 for (int j = 0; j < size; j++)
-                {
-                    RowDefinition row = new RowDefinition();
-                    row.Height = new GridLength(gridLenght);
-                    ColumnDefinition column = new ColumnDefinition();
-                    column.Width = new GridLength(gridLenght);
-
-                    
-                    grid.RowDefinitions.Add(row);
-                    grid.ColumnDefinitions.Add(column);
+                {                    
+                    grid.RowDefinitions.Add(new RowDefinition());
+                    grid.ColumnDefinitions.Add(new ColumnDefinition());
 
                     Button button = new Button();
                     Grid.SetRow(button, i);
                     Grid.SetColumn(button, j);
-                    button.Click += MainWindow.Button_Click;
-                    TextBlock text = new TextBlock();
-                    text.FontSize = 16;
-                    text.Padding = new Thickness(10);
-                    text.Text = "0";
-                    button.Content = text;
+                    button.Height = gridLenght;
+                    button.Width = gridLenght;
+                    button.Click += eventHandler;
+                    TextBlock textBlock = new TextBlock();
+                    textBlock.FontSize = 24;
+                    textBlock.Padding = new Thickness(1);
+                    textBlock.Text = "0";
+                    button.Content = textBlock.Text;
 
                     grid.Children.Add(button);
                 }
             }
-            stackPanel.Children.Add(grid);
+            //((Grid)container).Children.Add(grid);
+        }
+
+        public void Clean()
+        {
+            ((Grid)container).Children.Clear();
         }
 
 

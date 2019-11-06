@@ -20,13 +20,16 @@ namespace KardanoSquare
     /// </summary>
     public partial class MainWindow : Window
     {
-        static int[,] stencil;
+        int[,] stencil;
+        int[,] stencilCopy;
+        StencilHandler stencilHandler;
         public MainWindow()
         {
             InitializeComponent();
+            stencilHandler = new StencilHandler(stencilContainer);
         }
 
-        public static void Button_Click(object sender, RoutedEventArgs e)
+        public void Button_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
             int column = Grid.GetColumn(button);
@@ -34,24 +37,81 @@ namespace KardanoSquare
             if((string)button.Content == "0")
             {
                 button.Content = "1";
+
                 stencil[row, column] = 1;
+                HighlightButton(button);
             }
             else
             {
                 button.Content = "0";
                 stencil[row, column] = 0;
+                UnhighlightButton(button);
             }
+        }
+
+        private void UnhighlightButton(Button button)
+        {
+            button.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFDDDDDD"));
+            button.Foreground = new SolidColorBrush(Colors.Black);
+        }
+
+        // highlight button with content "1"
+        public void HighlightButton(Button button)
+        {
+            button.Background = new SolidColorBrush(Colors.DarkRed);
+            button.Foreground = new SolidColorBrush(Colors.White);
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-
-            if (sizeTextBox.Text != "")
+            // проверить не пустой ли текст для шифрования
+            if (plainTextBox.Text.Length != 0)
             {
-                int size = Int32.Parse(sizeTextBox.Text);
-                stencilHandler.Draw(stencilStackPanel, size);
-                stencil = new int[size, size];
+                if (sizeTextBox.Text.Length != 0)
+                {
+                    try
+                    {
+                        double number;
+                        number = Double.Parse(sizeTextBox.Text);
+                        if (number % 2 == 0)
+                        {
+                            int size = Convert.ToInt32(number);
+                            if(size * size >= plainTextBox.Text.Length)
+                            {
+                                stencilHandler.Clean();
+                                stencilHandler.Draw(size, Button_Click);
+                                stencil = new int[size, size];
+                            }
+                            else
+                            {
+                                MessageBox.Show("Матриця мала для цього тексту");
+                            }
+
+                        }
+                        else
+                        {
+                            MessageBox.Show("Введіть парне число");
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Введіть ціле число");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Введіть число в поле");
+                }
             }
+            else
+            {
+                MessageBox.Show("Необхідно ввести відкритий текст");
+            }
+        }
+
+        private void encryptButton_Click(object sender, RoutedEventArgs e)
+        {
+            
         }
     }
 }

@@ -240,6 +240,7 @@ namespace KardanoSquare
                     int digit = stencilCopyMatrix[i, j];
                     stencilMatrix[j, k] = digit;
                 }
+                k++;
             }
         }
 

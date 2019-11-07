@@ -30,6 +30,10 @@ namespace KardanoSquare
         /// розімір матриці
         /// </summary>
         int matrixSize;
+        // мінімальна кількість виділених рядочків
+        int minSelectedCellCount = 0;
+        // практична кількість виділених рядків
+        int practSelectedCellCount = 0;
         string plainText;
         string encryptedText;
         StencilHandler stencilHandler;
@@ -37,6 +41,7 @@ namespace KardanoSquare
         {
             InitializeComponent();
             stencilHandler = new StencilHandler(stencilContainer);
+            minSelectedCellCount = Int32.Parse(squereToSelectTextBlock.Text);
         }
 
         public void Button_Click(object sender, RoutedEventArgs e)
@@ -47,15 +52,16 @@ namespace KardanoSquare
             if((string)button.Content == "0")
             {
                 button.Content = "1";
-
                 stencilMatrix[row, column] = 1;
                 HighlightButton(button);
+                practSelectedCellCount++;
             }
             else
             {
                 button.Content = "0";
                 stencilMatrix[row, column] = 0;
                 UnhighlightButton(button);
+                practSelectedCellCount--;
             }
         }
 
@@ -95,6 +101,7 @@ namespace KardanoSquare
                                 // перевірити чи ініціалізується масив як false;
                                 fillMatrix = new bool[matrixSize, matrixSize];
                                 textMatrix = new char[matrixSize, matrixSize];
+                                encryptButton.IsEnabled = true;
                             }
                             else
                             {
@@ -125,36 +132,50 @@ namespace KardanoSquare
 
         private void encryptButton_Click(object sender, RoutedEventArgs e)
         {
-            int textIndex = 0;
-            int degree = 0;
-            while (degree < 360)
+            if (practSelectedCellCount >= minSelectedCellCount)
             {
-                for (int i = 0; i < matrixSize; i++)
+                // очистить bool матрицу
+                restoreMatrix(fillMatrix); 
+                // заповнити матрицю текстом
+                int textIndex = 0;
+                int degree = 0;
+                while (degree < 360)
                 {
-                    for (int j = 0; j < matrixSize; j++)
+                    for (int i = 0; i < matrixSize; i++)
                     {
-                        if (stencilMatrix[i, j] == 1)
+                        for (int j = 0; j < matrixSize; j++)
                         {
-                            textMatrix[i, j] = plainText[textIndex];
-                            fillMatrix[i, j] = true;
-                            textIndex++;
+                            if (stencilMatrix[i, j] == 1 && textIndex < plainText.Length)
+                            {
+                                textMatrix[i, j] = plainText[textIndex];
+                                fillMatrix[i, j] = true;
+                                textIndex++;
+                            }
                         }
                     }
+                    // перевернуть трафарет
+                    TurnStencilRight();
+                    degree += 90;
                 }
-                // перевернуть трафарет
-                TurnStencilRight();
-                degree += 90;
+                // отримати зашифрований текст
+                Encrypt();
             }
-            // отримати зашифрований текст
-            encryptedText = new string('a', plainText.Length);
-            textIndex = 0;
+            else
+            {
+                MessageBox.Show("Виділіть правильну кількість клітинок на трафареті");
+            }
+        }
+
+        void Encrypt()
+        {
+            encryptedText = "";
+            int textIndex = 0;
             for (int i = 0; i < matrixSize; i++)
             {
                 for (int j = 0; j < matrixSize; j++)
                 {
                     if (fillMatrix[i, j] == true)
                     {
-                        encryptedText = encryptedText.Remove(textIndex, 1);
                         char character = textMatrix[i, j];
                         encryptedText = encryptedText.Insert(textIndex, character.ToString());
                         textIndex++;
@@ -162,7 +183,9 @@ namespace KardanoSquare
                 }
             }
             encryptedTextBlock.Text = encryptedText;
+            descryptButton.IsEnabled = true;
         }
+
 
         private void TurnStencilRight()
         {
@@ -170,13 +193,9 @@ namespace KardanoSquare
             int[,] stencilCopyMatrix;
             stencilCopyMatrix = new int[matrixSize, matrixSize];
             // скопіювати матрицю трафарет у додаткову матрицю
-            for (int i = 0; i < matrixSize; i++)
-            {
-                for (int j = 0; j < matrixSize; j++)
-                {
-                    stencilCopyMatrix[i, j] = stencilMatrix[i, j];
-                }
-            }
+            CopyMatrix(stencilCopyMatrix, stencilMatrix);
+            // онулить stencilMatrix
+            restoreMatrix(stencilMatrix);
             int k = matrixSize - 1;
             for (int i = 0; i < matrixSize; i++)
             {
@@ -189,17 +208,103 @@ namespace KardanoSquare
             }
         }
 
+        /// <summary>
+        /// Функція здійснює копіювання матриці
+        /// </summary>
+        /// <param name="matrixA">Матриця в яку копіюють</param>
+        /// <param name="matrixB">Матриця з якої копіюють</param>
+        void CopyMatrix(int[,] matrixA, int[,] matrixB)
+        {
+            for (int i = 0; i < matrixSize; i++)
+            {
+                for (int j = 0; j < matrixSize; j++)
+                {
+                    matrixA[i, j] = matrixB[i, j];
+                }
+            }
+        }
+
+        private void TurnStencilLeft()
+        {
+            // допоміжна матриця, щоб повернути трафарет вліво
+            int[,] stencilCopyMatrix;
+            stencilCopyMatrix = new int[matrixSize, matrixSize]; 
+            CopyMatrix(stencilCopyMatrix, stencilMatrix);
+            // очистить stencil матрицу
+            restoreMatrix(stencilMatrix);
+            int k = 0;
+            for (int i = 0; i < matrixSize; i++)
+            {
+                for (int j = 0; j < matrixSize; j++)
+                {
+                    int digit = stencilCopyMatrix[i, j];
+                    stencilMatrix[j, k] = digit;
+                }
+            }
+        }
+
         private void plainTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (textLengthTextBlock != null)
             {
                 int digit = Int32.Parse(textLengthTextBlock.Text);
-                //int mod = digit % 4;
                 // при делении округлить в большую сторону
+                int mod = digit % 4;
                 digit /= 4;
-                //digit += mod;
+                if(mod > 0)
+                {
+                    digit++;
+                }
+                minSelectedCellCount = digit;
                 squereToSelectTextBlock.Text = digit.ToString();
             }
+        }
+
+        /// <summary>
+        /// Сбросить все настройки, для следующего шифрования
+        /// </summary>
+        void restoreMatrix(bool[,] matrix)
+        {
+            for (int i = 0; i < matrixSize; i++)
+            {
+                for (int j = 0; j < matrixSize; j++)
+                {
+                    matrix[i, j] = false;
+                }
+            }
+        }
+        void restoreMatrix(int[,] matrix)
+        {
+            for (int i = 0; i < matrixSize; i++)
+            {
+                for (int j = 0; j < matrixSize; j++)
+                {
+                    matrix[i, j] = 0;
+                }
+            }
+        }
+
+        private void descryptButton_Click(object sender, RoutedEventArgs e)
+        {
+            int degree = 360;
+            plainText = "";
+            while(degree > 0)
+            {
+                TurnStencilLeft();
+                for (int i = matrixSize-1; i >= 0; i--)
+                {
+                    for (int j = matrixSize-1; j >= 0; j--)
+                    {
+                        if(stencilMatrix[i, j] == 1)
+                        {
+                            char character = textMatrix[i, j];
+                            plainText = plainText.Insert(0, character.ToString());
+                        }
+                    }
+                }
+                degree -= 90;
+            }
+            descryptedTextBlock.Text = plainText;
         }
     }
 }

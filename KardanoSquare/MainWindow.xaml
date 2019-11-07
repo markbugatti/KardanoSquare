@@ -17,9 +17,6 @@
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0">
             <StackPanel x:Name="stencilStackPanel">
-                <StackPanel.Resources>
-                    <local:ArithmeticConverter x:Key="arithmConverter"/>    
-                </StackPanel.Resources>
                 <TextBlock Text="Відкритий текст" FontSize="16" Margin="10"/>
                 <TextBox x:Name="plainTextBox" Height="80" FontSize="16" Text="Привіт, як справи? Чи не втомився ти?" TextChanged="plainTextBox_TextChanged"/>
                 <StackPanel Orientation="Horizontal">
@@ -28,20 +25,36 @@
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Необхідно виділити квадратів"  FontSize="16" Margin="10"/>
-                    <TextBlock x:Name="squereToSelectTextBlock"  FontSize="16" Margin="10"/>
+                    <TextBlock x:Name="squereToSelectTextBlock" Text="10" FontSize="16" Margin="10"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Розмір матриці" FontSize="16" Margin="10"/>
                     <TextBox x:Name="sizeTextBox" Width="40" Height="26" FontSize="16" Text=""></TextBox>
                     <Button Content="Відобразити" Margin="8" Padding="10 2" FontSize="16" Click="Button_Click_1"></Button>
-                    <Button x:Name="encryptButton" Content="Зашифрувати" Margin="8" Padding="10 2" FontSize="16" Click="encryptButton_Click"/>
+                    <Button IsEnabled="False" x:Name="encryptButton" Content="Зашифрувати" Margin="8" Padding="10 2" FontSize="16" Click="encryptButton_Click"/>
                 </StackPanel>
             </StackPanel>
         </Grid>
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
             <Grid x:Name="stencilContainer"/>
         </ScrollViewer>
-        <TextBlock x:Name="encryptedTextBlock" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
-
+        <Grid Grid.Column="1" VerticalAlignment="Stretch">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Зашифроване повідомлення" HorizontalAlignment="Stretch" FontSize="16"/>
+            <TextBlock Grid.Row="1" x:Name="encryptedTextBlock" HorizontalAlignment="Stretch" FontSize="16"/>
+            <Button Grid.Row="2" VerticalAlignment="Bottom" IsEnabled="False" x:Name="descryptButton" Content="Розшифрувати" Margin="8" Padding="10 2" FontSize="16" Click="descryptButton_Click"/>
+        </Grid>
+        <Grid Grid.Column="1" Grid.Row="1" VerticalAlignment="Stretch">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Розшифроване повідомлення" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" FontSize="16"/>
+            <TextBlock Grid.Row="1" x:Name="descryptedTextBlock" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" FontSize="16"/>
+        </Grid>
     </Grid>
 </Window>

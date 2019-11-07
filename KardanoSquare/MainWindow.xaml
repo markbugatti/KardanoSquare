@@ -8,7 +8,7 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -17,9 +17,19 @@
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0">
             <StackPanel x:Name="stencilStackPanel">
+                <StackPanel.Resources>
+                    <local:ArithmeticConverter x:Key="arithmConverter"/>    
+                </StackPanel.Resources>
                 <TextBlock Text="Відкритий текст" FontSize="16" Margin="10"/>
-                <TextBox x:Name="plainTextBox" Height="80" FontSize="16" Text="Привіт, як справи? Чи не втомився ти?"></TextBox>
-                <TextBlock Text="Відкритий текст" FontSize="16" Margin="10"/>
+                <TextBox x:Name="plainTextBox" Height="80" FontSize="16" Text="Привіт, як справи? Чи не втомився ти?" TextChanged="plainTextBox_TextChanged"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Довжина відкритого тексту" FontSize="16" Margin="10"/>
+                    <TextBlock x:Name="textLengthTextBlock" Text="{Binding ElementName=plainTextBox, Path=Text.Length}" FontSize="16" Margin="10"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Необхідно виділити квадратів"  FontSize="16" Margin="10"/>
+                    <TextBlock x:Name="squereToSelectTextBlock"  FontSize="16" Margin="10"/>
+                </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Розмір матриці" FontSize="16" Margin="10"/>
                     <TextBox x:Name="sizeTextBox" Width="40" Height="26" FontSize="16" Text=""></TextBox>
@@ -31,8 +41,7 @@
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
             <Grid x:Name="stencilContainer"/>
         </ScrollViewer>
-        <Grid Grid.Column="1" ShowGridLines="True">
-            
-        </Grid>
+        <TextBlock x:Name="encryptedTextBlock" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+
     </Grid>
 </Window>

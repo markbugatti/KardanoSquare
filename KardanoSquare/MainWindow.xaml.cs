@@ -22,35 +22,52 @@ namespace KardanoSquare
     {
         int[,] stencilMatrix;
         /// <summary>
-        /// матриця, яка показує, чи заповнена клітинка в матриці тексту
+        /// Матриця, що показує, чи заповнена клітинка в матриці тексту
         /// </summary>
         bool[,] fillMatrix;
+
+        /// <summary>
+        /// Матриця, що містить в собі текст, заповнений через матрицю-трафарет
+        /// </summary>
         char[,] textMatrix;
+
         /// <summary>
         /// розімір матриці
         /// </summary>
         int matrixSize;
-        // мінімальна кількість виділених рядочків
+
+        /// <summary>
+        /// Мінімальна кількість клітинок, які необхідно виділити в матриці-трафареті
+        /// </summary>
         int minSelectedCellCount = 0;
-        // практична кількість виділених рядків
+
+        /// <summary>
+        /// Фактична кількість клітинок, які були виділені в матриці-трафареті
+        /// </summary>
         int practSelectedCellCount = 0;
+
+        /// <summary>
+        /// Відкритий текст
+        /// </summary>
         string plainText;
-        string encryptedText;
+
         StencilViewHandler stencilHandler;
         MatrixHandler MatrixHandler;
         EncryptionTextHandler EncryptionTextHandler;
         EncryptionHandler EncryptionHandler;
+        
         public MainWindow()
         {
             InitializeComponent();
             stencilHandler = new StencilViewHandler(stencilContainer);
             minSelectedCellCount = Int32.Parse(CellsToSelectTextBlock.Text);
 
+            MatrixHandler = new MatrixHandler();
             EncryptionTextHandler = new EncryptionTextHandler();
             EncryptionHandler = new EncryptionHandler(EncryptionTextHandler, MatrixHandler);
         }
 
-        public void Button_Click(object sender, RoutedEventArgs e)
+        public void StencilButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
             int column = Grid.GetColumn(button);
@@ -84,7 +101,7 @@ namespace KardanoSquare
             button.Foreground = new SolidColorBrush(Colors.White);
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void CreateStencilButton_Click(object sender, RoutedEventArgs e)
         {
             // проверить не пустой ли текст для шифрования
             if (plainTextBox.Text.Length != 0)
@@ -102,7 +119,7 @@ namespace KardanoSquare
                             if(matrixSize * matrixSize >= plainTextBox.Text.Length)
                             {
                                 stencilHandler.Clean();
-                                stencilHandler.Draw(matrixSize, Button_Click);
+                                stencilHandler.Draw(matrixSize, StencilButton_Click);
                                 stencilMatrix = new int[matrixSize, matrixSize];
                                 // перевірити чи ініціалізується масив як false;
                                 fillMatrix = new bool[matrixSize, matrixSize];
@@ -174,7 +191,7 @@ namespace KardanoSquare
         private void descryptButton_Click(object sender, RoutedEventArgs e)
         {
             descryptedTextBlock.Text = 
-                EncryptionHandler.Descrypt(plainText, stencilMatrix, textMatrix, matrixSize);
+                EncryptionHandler.Descrypt(plainText, stencilMatrix, textMatrix, fillMatrix, matrixSize);
         }
     }
 }

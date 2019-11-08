@@ -42,15 +42,15 @@ namespace KardanoSquare
             CopyMatrix(stencilCopyMatrix, matrix, size);
             // очистить stencil матрицу
             restoreMatrix(matrix, size);
-            int k = 0;
             for (int i = 0; i < size; i++)
             {
+                int k = size - 1;
                 for (int j = 0; j < size; j++)
                 {
                     int digit = stencilCopyMatrix[i, j];
-                    matrix[j, k] = digit;
+                    matrix[k, i] = digit;
+                    k--;
                 }
-                k++;
             }
         }
 

@@ -55,7 +55,7 @@ namespace KardanoSquare
             // Матриця тексту заповнена, необхідно зчитати з неї текст по рядкам.
             return EncryptionTextHandler.CreateEncryptText(fillMatrix, textMatrix, matrixSize);
         }
-        public string Descrypt(string plainText, int[,] stencilMatrix, char[,] textMatrix, int matrixSize)
+        public string Descrypt(string plainText, int[,] stencilMatrix, char[,] textMatrix, bool[,] fillMatrix, int matrixSize)
         {
             int degree = 360;
             plainText = "";
@@ -64,13 +64,15 @@ namespace KardanoSquare
             {
                 MatrixHandler.TurnStencilLeft(stencilMatrix, matrixSize);
                 degree -= 90;
-                
+                // Обробляємо марицю-трафарет зправа наліво, знизу на верх
                 for (int i = matrixSize - 1; i >= 0; i--)
                 {
                     for (int j = matrixSize - 1; j >= 0; j--)
                     {
-                        if (stencilMatrix[i, j] == 1)
+                        // Якщо клітинка в трафареті із "діркою" і якщо символ в текстовій матриці введений
+                        if (stencilMatrix[i, j] == 1 && fillMatrix[i, j] == true)
                         {
+                            // Забрати текст з відповідної клітинки текстової матриці
                             char character = textMatrix[i, j];
                             plainText = plainText.Insert(0, character.ToString());
                         }

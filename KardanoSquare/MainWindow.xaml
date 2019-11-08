@@ -12,7 +12,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="445.6"/>
+            <ColumnDefinition Width="488"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0">
@@ -30,7 +30,7 @@
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Розмір матриці" FontSize="16" Margin="10"/>
                     <TextBox x:Name="sizeTextBox" Width="40" Height="26" FontSize="16" Text=""></TextBox>
-                    <Button Content="Відобразити" Margin="8" Padding="10 2" FontSize="16" Click="Button_Click_1"></Button>
+                    <Button Content="Створити трафарет" Margin="8" Padding="10 2" FontSize="16" Click="CreateStencilButton_Click"></Button>
                     <Button IsEnabled="False" x:Name="encryptButton" Content="Зашифрувати" Margin="8" Padding="10 2" FontSize="16" Click="encryptButton_Click"/>
                 </StackPanel>
             </StackPanel>

@@ -56,6 +56,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="EncryptionHandler.cs" />
+    <Compile Include="EncryptionTextHandler.cs" />
     <Compile Include="MatrixHandler.cs" />
     <Compile Include="StencilViewHandler.cs" />
     <Page Include="MainWindow.xaml">

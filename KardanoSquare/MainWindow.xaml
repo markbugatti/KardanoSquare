@@ -25,7 +25,7 @@
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Необхідно виділити квадратів"  FontSize="16" Margin="10"/>
-                    <TextBlock x:Name="squereToSelectTextBlock" Text="10" FontSize="16" Margin="10"/>
+                    <TextBlock x:Name="CellsToSelectTextBlock" Text="10" FontSize="16" Margin="10"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Розмір матриці" FontSize="16" Margin="10"/>

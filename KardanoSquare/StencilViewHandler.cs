@@ -8,11 +8,11 @@ using System.Windows.Controls;
 
 namespace KardanoSquare
 {
-    class StencilHandler
+    class StencilViewHandler
     {
         const double gridLenght = 30;
         object container;
-        public StencilHandler(object container)
+        public StencilViewHandler(object container)
         {
             this.container = container;
         }

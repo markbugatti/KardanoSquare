@@ -36,11 +36,11 @@ namespace KardanoSquare
         int practSelectedCellCount = 0;
         string plainText;
         string encryptedText;
-        StencilHandler stencilHandler;
+        StencilViewHandler stencilHandler;
         public MainWindow()
         {
             InitializeComponent();
-            stencilHandler = new StencilHandler(stencilContainer);
+            stencilHandler = new StencilViewHandler(stencilContainer);
             minSelectedCellCount = Int32.Parse(squereToSelectTextBlock.Text);
         }
 
@@ -139,6 +139,7 @@ namespace KardanoSquare
                 // заповнити матрицю текстом
                 int textIndex = 0;
                 int degree = 0;
+                /// алгоритм шифрування
                 while (degree < 360)
                 {
                     for (int i = 0; i < matrixSize; i++)
@@ -166,6 +167,9 @@ namespace KardanoSquare
             }
         }
 
+        /// <summary>
+        /// створює зашифрований текст
+        /// </summary>
         void Encrypt()
         {
             encryptedText = "";
